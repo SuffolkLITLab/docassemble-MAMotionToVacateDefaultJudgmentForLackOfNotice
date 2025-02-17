@@ -11,19 +11,20 @@ metadata:
   description: |-
     This interview helps someone in Massachusetts file a Motion to Vacate Default Judgment for Lack of Notice.
   can_I_use_this_form: |
-    If you are a defendant who received a default judgment in your case but you never received notice, you can use this interview to File a motion to vacate default judgment for lack of notice.
+    If you are a defendant who received a default judgment in your case but you never received notice, you can use this interview to file a motion to vacate default judgment for lack of notice.
   before_you_start: |
     This interview will help you file a Motion to Vacate Default Judgment for Lack of Notice.
     
-    Before you get started, please gather:
+    Before you get started, gather:
     
-    1. Case number 
-    1. Opposing party's name  
+    1. Docket Number 
+    2. Case Information 
+    3. Opposing Party's Information   
     
     When you are finished, you will need to:
     
-    1. Sign
-    1. Date the signature
+    1. Sign the form 
+    2. Download the form
     
   maturity: production
   estimated_completion_minutes: 10
@@ -92,16 +93,16 @@ code: |
   user_role = "defendant"
   user_ask_role = "defendant"
   users.gather()
-  set_parts(subtitle=str(users))
-  small_claims
-  other_parties.gather()
-  set_progress(20)
   users[0].address.address
   users[0].phone_number
-  users[0].signature
+  set_parts(subtitle=str(users))
+  other_parties.gather()
+  small_claims
+  set_progress(20)
   signature_date
   set_progress(40)
   docket_number
+  users[0].signature
   interview_order_motion_to_vacate_default_judgment = True
 
 ---
@@ -130,18 +131,20 @@ continue button field: motion_to_vacate_default_judgment_intro
 question: |
   Motion to Vacate Default Judgment
 subquestion: |
-  This interview will help you file a Motion to Vacate Default Judgment for Lack of Notice.
+  This interview will help you file a Motion to Vacate Default Judgment if you did not recieve a notice.
   
-  Before you get started, please gather:
-  
-    1. The case number 
-    2. Opposing party's name  
+  Before you get started, gather:
+    
+    1. Docket Number 
+    2. Case Information 
+    3. Opposing Party's Information   
     
     When you are finished, you will need to:
     
-    1. Sign the form
+    1. Sign the Form 
+    2. Download the Form
 
-  If you are a person who received a default judgment in your case but you never received notice, you can use this interview to File a motion to vacate default judgment for lack of notice.
+  If you are a person who received a default judgment in your case but you never received notice, you can use this interview to file a motion to vacate default judgment for lack of notice.
 
   Most people take about 10 minutes to complete this interview.
 ---
@@ -152,8 +155,8 @@ fields:
   - "Is this a Small Claims case?": small_claims
     datatype: choice
     choices:
-      - "Yes"
-      - "No"
+      - "Yes": True
+      - "No": False
   - "Trial Court Type": trial_court.department
     datatype: choice
     choices:
