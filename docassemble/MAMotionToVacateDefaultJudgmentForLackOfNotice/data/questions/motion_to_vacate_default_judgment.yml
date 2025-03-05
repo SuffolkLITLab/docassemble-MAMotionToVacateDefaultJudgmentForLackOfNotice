@@ -1,0 +1,352 @@
+---
+include:
+  - docassemble.AssemblyLine:assembly_line.yml
+  - docassemble.MassAccess:massaccess.yml
+---
+metadata:
+  title: | 
+    Motion to Vacate Default Judgment
+  short title: |
+    Motion to Vacate Default
+  description: |-
+    This interview helps someone in Massachusetts file a Motion to Vacate Default Judgment for Lack of Notice.
+  can_I_use_this_form: |
+    If you are a defendant who received a default judgment in your case but you never received notice, you can use this interview to file a motion to vacate default judgment for lack of notice.
+  before_you_start: |
+    This interview will help you file a Motion to Vacate Default Judgment for Lack of Notice.
+    
+    Before you get started, gather:
+    
+    1. Docket Number 
+    2. Case Information 
+    3. Opposing Party's Information   
+    
+    When you are finished, you will need to:
+    
+    1. Sign the form 
+    2. Download the form
+    
+  maturity: production
+  estimated_completion_minutes: 10
+  estimated_completion_delta: 5
+  tags: []
+  authors:
+    - Saif Aladham
+  original_form: []
+  original_form_published_on: ""
+  allowed_courts: 
+    - "Boston Municipal Court"
+    - "District Court"
+    - "Housing Court"
+    - "Juvenile Court"
+    - "LAND COURT"
+    - "Probate and Family Court"
+    - "Superior Court"
+  typical_role: "defendant"
+  al_weaver_version: "1.11.0"
+  generated_on: "2024-09-13"
+  languages:
+    - en
+  jurisdiction: NAM-US-US+MA
+  review_date: 2024-09-13
+  form_titles:
+    - Motion to Vacate Default Judgment
+  form_numbers: []
+  update_notes: |
+---
+code: |
+  # This controls the default country and list of states in address field questions
+  AL_DEFAULT_COUNTRY = "US"
+---
+code: |
+  # This controls the default state in address field questions
+  AL_DEFAULT_STATE = "MA"
+---
+code: |
+  github_repo_name =  'docassemble-MotionToVacateDefaultJudgment'
+---
+code: |
+  interview_short_title = "File a Motion to Vacate Default Judgment for Lack of Notice"
+---
+code: |
+  al_form_type = "existing_case" 
+---
+objects:
+  - other_parties: ALPeopleList.using(there_are_any=True)
+  - users: ALPeopleList.using(there_are_any=True)
+---
+sections:
+  - review_motion_to_vacate_default_judgment: Review your answers
+---
+#################### Interview order #####################
+comment: |
+  Controls order and branching logic for questions specific to this form
+id: interview_order_motion_to_vacate_default_judgment
+code: |
+  # Set the allowed courts for this interview
+  allowed_courts = ['Boston Municipal Court', 'District Court', 'Housing Court', 'Juvenile Court', 'Land Court', 'Probate and Family Court', 'Superior Court']
+
+  # Initialize trial_court object (can be a variable)
+  # trial_court = {'department': None}
+
+  nav.set_section("review_motion_to_vacate_default_judgment")
+  user_role = "defendant"
+  user_ask_role = "defendant"
+  users.gather()
+  users[0].address.address
+  users[0].phone_number
+  set_parts(subtitle=str(users))
+  other_parties.gather()
+  small_claims
+  set_progress(20)
+  signature_date
+  set_progress(40)
+  docket_number
+  users[0].signature
+  interview_order_motion_to_vacate_default_judgment = True
+
+---
+###################### Main order ######################
+comment: |
+  This block includes the logic for standalone interviews.
+  Delete mandatory: True to include in another interview
+mandatory: True
+code: |
+  al_intro_screen
+  motion_to_vacate_default_judgment_intro
+  interview_order_motion_to_vacate_default_judgment
+  signature_date
+  # Store anonymous data for analytics / statistics
+  store_variables_snapshot(
+      persistent=True,
+      data={
+          "zip": showifdef("users[0].address.zip"),
+          "reached_interview_end": True,
+      },
+  )
+  motion_to_vacate_default_judgment_download
+---
+id: Motion_to_Vacate_Default_Judgment
+continue button field: motion_to_vacate_default_judgment_intro
+question: |
+  Motion to Vacate Default Judgment
+subquestion: |
+  This interview will help you file a Motion to Vacate Default Judgment if you did not recieve a notice.
+  
+  Before you get started, gather:
+    
+    1. Docket Number 
+    2. Case Information 
+    3. Opposing Party's Information   
+    
+    When you are finished, you will need to:
+    
+    1. Sign the Form 
+    2. Download the Form
+
+  If you are a person who received a default judgment in your case but you never received notice, you can use this interview to file a motion to vacate default judgment for lack of notice.
+
+  Most people take about 10 minutes to complete this interview.
+---
+id: Court Information
+question: |
+  Please provide the following details:
+fields:
+  - "Is this a Small Claims case?": small_claims
+    datatype: choice
+    choices:
+      - "Yes": True
+      - "No": False
+  - "Trial Court Type": trial_court.department
+    datatype: choice
+    choices:
+      - "Boston Municipal Court"
+      - "District Court"
+      - "Housing Court"
+      - "Juvenile Court"
+      - "Land Court"
+      - "Probate and Family Court"
+      - "Superior Court"
+---
+id: court_type_check
+question: |
+  You selected the following court type:
+  **Court Type:** ${ trial_court.department }
+
+  **Is it a Small Claims case?**: ${ small_claims }
+
+  Click continue to proceed.
+#--- 
+#id: signature_draw 
+#question: |
+#  Please provide your signature below. 
+#subquestion: |
+#  You can use your mouse to draw your signature in the box.
+#fields:
+#  - Signature: users[0].signature 
+#    datatype: signature
+#    required: True
+---
+id: preview motion_to_vacate_default_judgment
+question: |
+  Preview your form before you sign it
+subquestion: |
+  Here is a preview of the form you will sign on the next page.   
+  
+  ${ al_court_bundle.as_pdf(key='preview') }
+
+  Click the image to open it in a new tab. Click the "Edit answers" button
+  to edit your answers.
+
+  ${ action_button_html(url_action('review_motion_to_vacate_default_judgment'), label='Edit answers', color='info') }
+  
+  Remember to come back to this window to continue and sign your form.
+continue button field: motion_to_vacate_default_judgment_preview_question    
+---
+code: |
+  signature_fields = ['users[0].signature']
+---
+code: |
+  # This is a placeholder for the addresses that will be searched
+  # for matching address to court. Edit if court venue is based on 
+  # a different address than the user's
+  [user.address.address for user in users.complete_elements()]
+  addresses_to_search = [user.address for user in users.complete_elements()]
+---
+id: motion to vacate default judgment review screen
+event: review_motion_to_vacate_default_judgment
+question: |
+  Review your answers
+review:
+  - Edit: other_parties.revisit
+    button: |
+      **Other parties**
+
+      % for item in other_parties:
+        * ${ item }
+      % endfor
+  - Edit: users.revisit
+    button: |
+      **Users**
+
+      % for item in users:
+        * ${ item }
+      % endfor
+  - Edit: small_claims
+    button: |
+      **Small claims**:
+      ${ small_claims }
+  - Edit: signature_date
+    button: |
+      **Date of Signature**:
+      ${ signature_date }
+  - Edit: trial_court
+    button: |
+      **Trial court**
+  
+      % if defined("trial_court.room"):
+      * room: ${ trial_court.room }
+      % endif
+      % if defined("trial_court.department"):
+      * department: ${ trial_court.department }
+      % endif
+  - Edit: docket_number
+    button: |
+      **Docket number**:
+      ${ docket_number }
+---
+continue button field: other_parties.revisit
+question: |
+  Edit other_parties
+subquestion: |
+  ${ other_parties.table }
+
+  ${ other_parties.add_action() }
+---
+table: other_parties.table
+rows: other_parties
+columns:
+  - Name: |
+      row_item.name.full() if defined("row_item.name.first") else ""
+edit:
+  - name.first
+confirm: True
+
+---
+continue button field: users.revisit
+question: |
+  Edit users
+subquestion: |
+  ${ users.table }
+
+  ${ users.add_action() }
+---
+table: users.table
+rows: users
+columns:
+  - Name: |
+      row_item.name.full() if defined("row_item.name.first") else ""
+  - Address: |
+      row_item.address.block() if defined("row_item.address.address") else ""
+  - Signature: |
+      row_item.signature if defined("row_item.signature") else ""
+  - Phone number: |
+      row_item.phone_number if defined("row_item.phone_number") else ""
+edit:
+  - name.first
+  - address.address
+  - signature
+  - phone_number
+confirm: True
+
+---
+id: download motion_to_vacate_default_judgment
+event: motion_to_vacate_default_judgment_download
+question: |
+  All done
+subquestion: |
+  Thank you ${users}. Your form is ready to download and deliver.
+  
+  View, download and send your form below. Click the "Edit answers" button to fix any mistakes.
+
+  ${ action_button_html(url_action('review_motion_to_vacate_default_judgment'), label='Edit answers', color='info') }
+  
+  
+  ${ al_user_bundle.download_list_html() }
+  
+
+  ${ al_user_bundle.send_button_html(show_editable_checkbox=True) }
+
+progress: 100
+---
+# ALDocument objects specify the metadata for each template
+objects:
+  - motion_to_vacate_default_judgment_Post_interview_instructions: ALDocument.using(title="Instructions", filename="MAmotion_to_vacate_default_judgment.docx", enabled=True, has_addendum=False)
+  - motion_to_vacate_default_judgment_attachment: ALDocument.using(title="Motion to Vacate Default Judgment", filename="motion_to_vacate_default_judgment", enabled=True, has_addendum=False, )
+---
+# Bundles group the ALDocuments into separate downloads, such as for court and for the user
+objects:
+  - al_user_bundle: ALDocumentBundle.using(elements=[motion_to_vacate_default_judgment_Post_interview_instructions, motion_to_vacate_default_judgment_attachment], filename="motion_to_vacate_default_judgment", title="All forms to download for your records", enabled=True)
+  - al_court_bundle: ALDocumentBundle.using(elements=[motion_to_vacate_default_judgment_attachment],  filename="motion_to_vacate_default_judgment", title="All forms to deliver to court", enabled=True)
+---
+# Each attachment defines a key in an ALDocument. We use `i` as the placeholder here so the same template is 
+# used for "preview" and "final" keys, and logic in the template checks the value of 
+# `i` to show or hide the user's signature
+attachment:
+  name: Post-interview-Instructions
+  filename: motion_to_vacate_default_judgment_next_steps
+  docx template file: motion_to_vacate_default_judgment_next_steps.docx
+  variable name: motion_to_vacate_default_judgment_Post_interview_instructions[i]
+  skip undefined: True
+  tagged pdf: True
+---
+attachment:
+  name: motion to vacate default judgment
+  filename: motion_to_vacate_default_judgment
+  variable name: motion_to_vacate_default_judgment_attachment[i]
+  skip undefined: True
+  docx template file: MAmotion_to_vacate_default_judgment.docx
+  tagged pdf: True
+
+
+
