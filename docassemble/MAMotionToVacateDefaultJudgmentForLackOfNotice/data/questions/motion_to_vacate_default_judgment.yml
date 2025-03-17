@@ -9,17 +9,35 @@ metadata:
   short title: |
     Motion to Vacate Default
   description: |-
-    This interview helps someone in Massachusetts file a Motion to Vacate Default Judgment for Lack of Notice.
+    This interview helps someone in Massachusetts file a Motion to Vacate Default 
+    Judgment for Lack of Notice.
+
+    If you missed your original court hearing, this form can help you tell the court that you
+    did not get a notice about the hearing. You can use this form to ask the court to
+    remove the judgment against you and give you a new hearing.
+
+    You can use this form in any court that you have a case in, including:
+
+    - Boston Municipal Court
+    - District Court
+    - Housing Court
+    - Juvenile Court
+    - Land Court
+    - Probate and Family Court
+    - Superior Court
+
+    And you can use it is a small claims case, an eviction case, or any other civil case.
   can_I_use_this_form: |
-    If you are a defendant who received a default judgment in your case but you never received notice, you can use this interview to file a motion to vacate default judgment for lack of notice.
+    If you are a defendant who received a default judgment in your case but you never received notice,
+    you can use this interview to file a motion to vacate default judgment for lack of notice.
   before_you_start: |
     This interview will help you file a Motion to Vacate Default Judgment for Lack of Notice.
     
     Before you get started, gather:
     
-    1. Docket Number 
-    2. Case Information 
-    3. Opposing Party's Information   
+    1. Docket number (or case number)
+    2. The name of the court your case was filed in
+    3. The name of the person who brought the case against you (the plaintiff)
     
     When you are finished, you will need to:
     
@@ -29,17 +47,23 @@ metadata:
   maturity: production
   estimated_completion_minutes: 10
   estimated_completion_delta: 5
-  tags: []
+  tags:
+    - MO-10-01-00-00
+    - CO-07-05-02-00
+  LIST_topics: 
+    - MO-10-01-00-00
+    - CO-07-05-02-00
   authors:
     - Saif Aladham
+    - Greater Boston Legal Services's Consumer Rights Unit
   original_form: []
-  original_form_published_on: ""
+  original_form_published_on: "11/01/2024"
   allowed_courts: 
     - "Boston Municipal Court"
     - "District Court"
     - "Housing Court"
     - "Juvenile Court"
-    - "LAND COURT"
+    - "Land Court"
     - "Probate and Family Court"
     - "Superior Court"
   typical_role: "defendant"
@@ -48,11 +72,12 @@ metadata:
   languages:
     - en
   jurisdiction: NAM-US-US+MA
-  review_date: 2024-09-13
+  review_date: 2025-03-17
   form_titles:
     - Motion to Vacate Default Judgment
   form_numbers: []
   update_notes: |
+    Custom motion from Consumer Rights Unit at Greater Boston Legal Services, checked fall of 2024.
 ---
 code: |
   # This controls the default country and list of states in address field questions
@@ -86,9 +111,6 @@ code: |
   # Set the allowed courts for this interview
   allowed_courts = ['Boston Municipal Court', 'District Court', 'Housing Court', 'Juvenile Court', 'Land Court', 'Probate and Family Court', 'Superior Court']
 
-  # Initialize trial_court object (can be a variable)
-  # trial_court = {'department': None}
-
   nav.set_section("review_motion_to_vacate_default_judgment")
   user_role = "defendant"
   user_ask_role = "defendant"
@@ -97,12 +119,12 @@ code: |
   users[0].phone_number
   set_parts(subtitle=str(users))
   other_parties.gather()
+  trial_court
   small_claims
   set_progress(20)
   signature_date
   set_progress(40)
   docket_number
-  users[0].signature
   interview_order_motion_to_vacate_default_judgment = True
 
 ---
@@ -116,6 +138,7 @@ code: |
   motion_to_vacate_default_judgment_intro
   interview_order_motion_to_vacate_default_judgment
   signature_date
+  basic_questions_signature_flow
   # Store anonymous data for analytics / statistics
   store_variables_snapshot(
       persistent=True,
@@ -131,18 +154,20 @@ continue button field: motion_to_vacate_default_judgment_intro
 question: |
   Motion to Vacate Default Judgment
 subquestion: |
-  This interview will help you file a Motion to Vacate Default Judgment if you did not recieve a notice.
+  This interview will help you file a Motion to Vacate Default Judgment if you did not get a notice
+  about your court case and lost it by default.
+  
   
   Before you get started, gather:
+  
+  1. Docket number (or case number)
+  2. The name of the court your case was filed in
+  3. The name of the person who brought the case against you (the plaintiff)
     
-    1. Docket Number 
-    2. Case Information 
-    3. Opposing Party's Information   
-    
-    When you are finished, you will need to:
-    
-    1. Sign the Form 
-    2. Download the Form
+  When you are finished, you will need to:
+  
+  1. Sign the Form 
+  2. Download the Form
 
   If you are a person who received a default judgment in your case but you never received notice, you can use this interview to file a motion to vacate default judgment for lack of notice.
 
@@ -150,23 +175,22 @@ subquestion: |
 ---
 id: Court Information
 question: |
-  Please provide the following details:
+  Is this a small claims case?
+subquestion: |
+  Many consumer debt collection cases are filed in a Small Claims case.
 fields:
-  - "Is this a Small Claims case?": small_claims
-    datatype: choice
-    choices:
-      - "Yes": True
-      - "No": False
-  - "Trial Court Type": trial_court.department
-    datatype: choice
-    choices:
-      - "Boston Municipal Court"
-      - "District Court"
-      - "Housing Court"
-      - "Juvenile Court"
-      - "Land Court"
-      - "Probate and Family Court"
-      - "Superior Court"
+  - "This a Small Claims case:": small_claims
+    datatype: yesnoradio
+  # - "Trial Court Type": trial_court.department
+  #   datatype: choice
+  #   choices:
+  #     - "Boston Municipal Court"
+  #     - "District Court"
+  #     - "Housing Court"
+  #     - "Juvenile Court"
+  #     - "Land Court"
+  #     - "Probate and Family Court"
+  #     - "Superior Court"
 ---
 id: court_type_check
 question: |
